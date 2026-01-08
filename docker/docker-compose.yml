@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-
   studio:
     image: supabase/studio:2025.12.17-sha-43f4f7f
     restart: unless-stopped
@@ -11,7 +8,7 @@ services:
           "CMD",
           "node",
           "-e",
-          "fetch('http://studio:3000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})"
+          "fetch('http://localhost:3000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})"
         ]
       timeout: 10s
       interval: 5s
@@ -20,7 +17,7 @@ services:
       analytics:
         condition: service_healthy
     environment:
-      HOSTNAME: "::"
+      HOSTNAME: "0.0.0.0"
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_HOST: ${POSTGRES_HOST}
@@ -45,7 +42,6 @@ services:
   kong:
     image: kong:2.8.1
     restart: unless-stopped
-    # Ports removidos para evitar conflito. O Easypanel roteia internamente para a porta 8000.
     volumes:
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
     depends_on:
@@ -275,7 +271,6 @@ services:
   analytics:
     image: supabase/logflare:1.27.0
     restart: unless-stopped
-    # Ports removed
     healthcheck:
       test:
         [
@@ -385,7 +380,6 @@ services:
   supavisor:
     image: supabase/supavisor:2.7.4
     restart: unless-stopped
-    # Ports removed
     volumes:
       - ./volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
     healthcheck:
