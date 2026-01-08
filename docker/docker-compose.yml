@@ -2,17 +2,7 @@ services:
   studio:
     image: supabase/studio:2025.12.17-sha-43f4f7f
     restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://localhost:3000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})"
-        ]
-      timeout: 10s
-      interval: 5s
-      retries: 3
+    # Healthcheck removido para corrigir Erro 503 no Easypanel
     depends_on:
       analytics:
         condition: service_healthy
